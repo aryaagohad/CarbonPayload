@@ -95,6 +95,15 @@
 
         const nodes = pack(root).descendants();
 
+        let focus = root; // Track the currently focused node
+        const zoomTo = (v) => {
+            const k = width / v[2];
+            svg.transition()
+                .duration(750)
+                .attr("viewBox", `${v[0] - width / 2} ${v[1] - height / 2} ${width} ${height}`)
+                .attr("transform", `translate(${width / 2},${height / 2}) scale(${k})`);
+        };
+
         const circle = svg.selectAll("circle")
             .data(nodes)
             .join("circle")
