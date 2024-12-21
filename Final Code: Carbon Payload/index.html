@@ -33,6 +33,7 @@
     <div class="title">
         <h1>The Invisible CCs of an Email</h1>
     </div>
+<script>
 const data = {
             name: "CO2 Emissions",
             children: [
@@ -62,5 +63,63 @@ const data = {
                 }
             ]
         };
+  const width = 800;
+        const height = 800;
+
+        const svg = d3.select("svg")
+            .attr("viewBox", 0 0 ${width} ${height})
+            .style("font", "10px sans-serif");
+
+        const pack = d3.pack()
+            .size([width, height])
+            .padding(3);
+
+        const root = d3.hierarchy(data)
+            .sum(d => d.value || 0)
+            .sort((a, b) => b.value - a.value);
+
+        const nodes = pack(root).descendants();
+
+        const circle = svg.selectAll("circle")
+            .data(nodes)
+            .join("circle")
+            .attr("fill", d => {
+                if (d.depth === 0) return "#10202D";
+                if (d.depth === 1) return "#253745";
+                if (d.depth === 2) return "#99A5A9";
+                return "#ddd";
+            })
+            .attr("stroke", "none") // No border by default
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y)
+            .attr("r", d => d.r)
+            .on("mouseover", function (event, d) {
+                d3.select(this).attr("stroke", "#FFC233").attr("stroke-width", 2);
+                // Show corresponding text
+                svg.selectAll("text")
+                    .filter(t => t === d)
+                    .style("opacity", 1);
+            })
+            .on("mouseout", function (event , d) {
+                d3.select(this).attr("stroke", "none");
+                // Hide corresponding text
+                svg.selectAll("text")
+                    .filter(t => t === d)
+                    .style("opacity", 0);
+            });
+
+        const text = svg.selectAll("text")
+            .data(nodes)
+            .join("text")
+            .attr("x", d => d.x)
+            .attr("y", d => d.y)
+            .attr("dy", "0.3em")
+            .style("text-anchor", "middle")
+            .style("font-size", "24px")
+            .style("pointer-events", "none") // Prevent blocking hover
+            .style("opacity", 0) // Hide text by default
+            .style("fill", "10202D")
+            .text(d => d.data.name);
+</script>
 </body>
 </html>
