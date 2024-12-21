@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customized Circle Packing</title>
+    <title>Interactive Circle Packing</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <style>
         body {
@@ -29,7 +29,7 @@
     </style>
 </head>
 <body>
-    <svg width="800" height="800"></svg>
+    <svg width="1500" height="1500"></svg> <!-- Increased SVG size -->
     <div class="title">
         <h1>The Invisible CCs of an Email</h1>
     </div>
@@ -78,8 +78,8 @@
             ]
         };
 
-        const width = 800;
-        const height = 800;
+        const width = 1500; // Increased width
+        const height = 1500; // Increased height
 
         const svg = d3.select("svg")
             .attr("viewBox", `0 0 ${width} ${height}`)
@@ -96,15 +96,14 @@
         const nodes = pack(root).descendants();
 
         let focus = root; // Track the currently focused node
+
         const zoomTo = (v) => {
-            const k = width / v[2];
+            const k = Math.min(width, height) / v[2]; // Scale factor
             svg.transition()
                 .duration(750)
-                .attr("viewBox", `${v[0] - width / 2} ${v[1] - height / 2} ${width} ${height}`)
-                .attr("transform", `translate(${width / 2},${height / 2}) scale(${k})`);
+                .attr("viewBox", `${v[0] - v[2] / 2} ${v[1] - v[2] / 2} ${v[2]} ${v[2]}`);
         };
 
-        
         const render = () => {
             const circle = svg.selectAll("circle")
                 .data(nodes)
