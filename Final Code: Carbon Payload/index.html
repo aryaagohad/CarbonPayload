@@ -29,7 +29,7 @@
     </style>
 </head>
 <body>
-    <svg width="1500" height="1500"></svg> <!-- Increased SVG size -->
+    <svg width="800" height="800"></svg> <!-- Keep the SVG size fixed -->
     <div class="title">
         <h1>The Invisible CCs of an Email</h1>
     </div>
@@ -78,8 +78,8 @@
             ]
         };
 
-        const width = 1500; // Increased width
-        const height = 1500; // Increased height
+        const width = 800; // Keep the original width
+        const height = 800; // Keep the original height
 
         const svg = d3.select("svg")
             .attr("viewBox", `0 0 ${width} ${height}`)
@@ -146,3 +146,4 @@
     </script>
 </body>
 </html>
+
