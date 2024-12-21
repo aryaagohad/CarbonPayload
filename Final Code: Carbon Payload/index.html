@@ -33,5 +33,34 @@
     <div class="title">
         <h1>The Invisible CCs of an Email</h1>
     </div>
+const data = {
+            name: "CO2 Emissions",
+            children: [
+                {
+                    name: "Sending Emails",
+                    children: [
+                        { name: "Recipients", children: [{ name: "0.3g per person", value: 0.3 }] },
+                        { name: "Documents", children: [{ name: "20g per MB", value: 20 }] },
+                        { name: "Audio", children: [{ name: "20g per MB", value: 20 }] },
+                        { name: "Video", children: [{ name: "20g per MB", value: 20 }] },
+                        { name: "Links", children: [{ name: "6g per link", value: 6 }] },
+                        { name: "AI Prompts", children: [{ name: "4g per 100 words", value: 4 }] }
+                    ]
+                },
+                {
+                    name: "Receiving Emails",
+                    children: [
+                        { name: "Device", children: [
+                            { name: "0.3g per mail on laptop", value: 0.3 },
+                            { name: "0.2g per mail on phone", value: 0.2 }
+                        ] },
+                        { name: "Views", children: [{ name: "0.3g per view", value: 0.3 }] },
+                        { name: "Subscriptions", children: [{ name: "30g per newsletter", value: 30 }] },
+                        { name: "Spam", children: [{ name: "0.3g per email", value: 0.3 }] },
+                        { name: "Saves", children: [{ name: "20g per MB", value: 20 }] }
+                    ]
+                }
+            ]
+        };
 </body>
 </html>
