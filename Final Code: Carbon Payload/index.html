@@ -108,14 +108,14 @@
             const circle = svg.selectAll("circle")
                 .data(nodes)
                 .join("circle")
-                .attr("fill", d => {
+                .attr("fill", d => { //colours based on hierarchy 
                     if (d.depth === 0) return "#10202D";
                     if (d.depth === 1) return "#253745";
                     if (d.depth === 2) return "#99A5A9";
                     if (d.depth === 3) return "#FFC233";
                     return "#ddd";
                 })
-                .attr("stroke", "none")
+                .attr("stroke", "none") // default state: no border 
                 .attr("cx", d => d.x)
                 .attr("cy", d => d.y)
                 .attr("r", d => d.r)
@@ -123,7 +123,18 @@
                     if (focus !== d) {
                         focus = d;
                         zoomTo([d.x, d.y, d.r * 2]);
+                        // Show text when clicked
+                        svg.selectAll("text")
+                            .style("opacity", t => (t === d) ? 1 : 0); // Show only text for the clicked node
                     }
+                })
+                .on("mouseover", function(event, d) {
+                    if (d.depth > 0) { // Only add border if depth > 0 (not the innermost circle)
+                        d3.select(this).attr("stroke", "#FFC233").attr("stroke-width", 2); // Add yellow border on hover
+                    }
+                })
+                .on("mouseout", function(event, d) {
+                    d3.select(this).attr("stroke", "none"); // Remove border on mouseout
                 });
 
             const text = svg.selectAll("text")
@@ -133,11 +144,15 @@
                 .attr("y", d => d.y)
                 .attr("dy", "0.3em")
                 .style("text-anchor", "middle")
-                .style("font-size", d => `${10 + d.depth * 2}px`)
+                .style("font-size", d => {
+                    // Calculate the font size based on the circle's radius
+                    const baseFontSize = Math.max(8, d.r / 6); // Reduced font size for better fit
+                    return `${baseFontSize}px`;
+                })
                 .style("pointer-events", "none")
-                .style("opacity", d => (d.parent === focus || d === focus) ? 1 : 0)
-                .style("fill", "#FFFFFF")
-                .text(d => d.data.name);
+                .style("opacity", 0) // Start with text hidden
+                .style("fill", "#10202D") // Deep blue color for text
+                .text(d => d.depth > 0 ? d.data.name : ""); // Only display text for depth > 0 (remove CO2 Emissions)
 
             zoomTo([focus.x, focus.y, focus.r * 2]);
         };
@@ -146,4 +161,5 @@
     </script>
 </body>
 </html>
+
 
