@@ -104,45 +104,46 @@
                 .attr("transform", `translate(${width / 2},${height / 2}) scale(${k})`);
         };
 
-        const circle = svg.selectAll("circle")
-            .data(nodes)
-            .join("circle")
-            .attr("fill", d => {
-                if (d.depth === 0) return "#10202D";
-                if (d.depth === 1) return "#253745";
-                if (d.depth === 2) return "#99A5A9";
-                if (d.depth === 3) return "#FFC233";
-                return "#ddd";
-            })
-            .attr("stroke", "none")
-            .attr("cx", d => d.x)
-            .attr("cy", d => d.y)
-            .attr("r", d => d.r)
-            .on("mouseover", function (event, d) {
-                d3.select(this).attr("stroke", "#FFC233").attr("stroke-width", 2);
-                svg.selectAll("text")
-                    .filter(t => t === d)
-                    .style("opacity", 1);
-            })
-            .on("mouseout", function (event, d) {
-                d3.select(this).attr("stroke", "none");
-                svg.selectAll("text")
-                    .filter(t => t === d)
-                    .style("opacity", 0);
-            });
+        
+        const render = () => {
+            const circle = svg.selectAll("circle")
+                .data(nodes)
+                .join("circle")
+                .attr("fill", d => {
+                    if (d.depth === 0) return "#10202D";
+                    if (d.depth === 1) return "#253745";
+                    if (d.depth === 2) return "#99A5A9";
+                    if (d.depth === 3) return "#FFC233";
+                    return "#ddd";
+                })
+                .attr("stroke", "none")
+                .attr("cx", d => d.x)
+                .attr("cy", d => d.y)
+                .attr("r", d => d.r)
+                .on("click", (event, d) => {
+                    if (focus !== d) {
+                        focus = d;
+                        zoomTo([d.x, d.y, d.r * 2]);
+                    }
+                });
 
-        const text = svg.selectAll("text")
-            .data(nodes)
-            .join("text")
-            .attr("x", d => d.x)
-            .attr("y", d => d.y)
-            .attr("dy", "0.3em")
-            .style("text-anchor", "middle")
-            .style("font-size", d => `${10 + d.depth * 2}px`)
-            .style("pointer-events", "none")
-            .style("opacity", 0)
-            .style("fill", "#FFFFFF")
-            .text(d => d.data.name);
+            const text = svg.selectAll("text")
+                .data(nodes)
+                .join("text")
+                .attr("x", d => d.x)
+                .attr("y", d => d.y)
+                .attr("dy", "0.3em")
+                .style("text-anchor", "middle")
+                .style("font-size", d => `${10 + d.depth * 2}px`)
+                .style("pointer-events", "none")
+                .style("opacity", d => (d.parent === focus || d === focus) ? 1 : 0)
+                .style("fill", "#FFFFFF")
+                .text(d => d.data.name);
+
+            zoomTo([focus.x, focus.y, focus.r * 2]);
+        };
+
+        render();
     </script>
 </body>
 </html>
